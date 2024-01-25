@@ -1,12 +1,17 @@
-FROM node:latest
-COPY index.js /home/app/index.js
-COPY package.json /home/app/package.json
-# COPY . /home/app  not recommended as it copy the node_modules directory files too
+FROM ubuntu
 
-WORKDIR /home/app/
+RUN apt-get update
+RUN apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get upgrade -y
+RUN apt-get install -y nodejs
+
+WORKDIR /app
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+COPY main.js main.js
 
 RUN npm install
 
-EXPOSE 9000
-
-CMD [ "node","index" ]
+ENTRYPOINT [ "node", "main.js" ]
